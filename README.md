@@ -1,4 +1,4 @@
-# Farm2Pot
+# 밭to밥(Farm2Pot)
 
 ## 기능 명세
 
