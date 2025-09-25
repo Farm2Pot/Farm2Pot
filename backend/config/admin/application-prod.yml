@@ -23,4 +23,6 @@ kafka:
 
 # frontend server host
 frontend:
-  host: ${SPRING_FRONTEND_HOST}
+  protocol: ${FRONTEND_PROTOCOL}
+  host: ${FRONTEND_HOST}
+  port: ${FRONTEND_PORT}

@@ -1,33 +1,27 @@
 {
-  "name": "frontend",
+  "name": "farm2pot",
   "private": true,
-  "version": "0.0.0",
-  "type": "module",
+  "version": "1.0.0",
+  "description": "This is a our Project for Study.",
+  "keywords": [
+    "farm2pot"
+  ],
+  "license": "ISC",
+  "author": "",
+  "type": "commonjs",
+  "main": "index.js",
+  "workspaces": [
+    "packages/*"
+  ],
   "scripts": {
-    "dev": "vite",
-    "build": "vite build --mode production",
-    "lint": "eslint .",
-    "preview": "vite preview --mode production --port 5173"
+    "dev:admin": "npm run dev --workspace=admin",
+    "dev:user": "npm run dev --workspace=user",
+    "dev:subscribe": "npm run dev --workspace=subscribe",
+    "build:admin": "npm run build --workspace=admin",
+    "build:user": "npm run build --workspace=user",
+    "build:subscribe": "npm run build --workspace=subscribe"
   },
   "dependencies": {
-    "@emotion/react": "^11.14.0",
-    "@emotion/styled": "^11.14.1",
-    "@mui/material": "^7.3.2",
-    "axios": "^1.12.2",
-    "react": "^19.1.1",
-    "react-dom": "^19.1.1",
-    "react-router-dom": "^7.9.1",
-    "router": "^2.2.0"
-  },
-  "devDependencies": {
-    "@eslint/js": "^9.35.0",
-    "@types/react": "^19.1.13",
-    "@types/react-dom": "^19.1.9",
-    "@vitejs/plugin-react": "^5.0.2",
-    "eslint": "^9.35.0",
-    "eslint-plugin-react-hooks": "^5.2.0",
-    "eslint-plugin-react-refresh": "^0.4.20",
-    "globals": "^16.4.0",
-    "vite": "^7.1.6"
+    "axios": "^1.12.2"
   }
 }

@@ -58,7 +58,6 @@ subprojects {
     }
 
     dependencies {
-        implementation 'org.springframework.boot:spring-boot-starter-security'
         implementation 'org.springframework.boot:spring-boot-starter-web'
 
         compileOnly 'org.projectlombok:lombok'
@@ -158,6 +157,10 @@ project(":apps:core") {
         archiveVersion.set(version as String)
         archiveClassifier.set('')
     }
+    dependencies {
+        implementation 'org.springframework.boot:spring-boot-starter-security'
+        developmentOnly 'org.springframework.boot:spring-boot-devtools'
+    }
     springBoot {
         mainClass = 'com.farm2pot.Main'
     }
@@ -172,7 +175,6 @@ project(":apps:user") {
         archiveClassifier.set('')
     }
     dependencies {
-        implementation project(':apps:core')
         developmentOnly 'org.springframework.boot:spring-boot-devtools'
     }
     springBoot {
@@ -189,7 +191,6 @@ project(":apps:admin") {
         archiveClassifier.set('')
     }
     dependencies {
-        implementation project(':apps:core')
         developmentOnly 'org.springframework.boot:spring-boot-devtools'
     }
     springBoot {
@@ -206,7 +207,6 @@ project(":apps:subscription") {
         archiveClassifier.set('')
     }
     dependencies {
-        implementation project(':apps:core')
         developmentOnly 'org.springframework.boot:spring-boot-devtools'
     }
     springBoot {

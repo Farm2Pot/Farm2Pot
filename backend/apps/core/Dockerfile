@@ -1,21 +1,19 @@
-# Gradle 빌드용 JDK
+# 1단계: 빌드
 FROM eclipse-temurin:21-jdk AS builder
 
-WORKDIR /app
-
-# 루트 gradle 파일과 소스 복사
+WORKDIR /app/farm2Pot
 COPY . .
 
-# core 모듈만 빌드 (멀티모듈 루트 backend 기준)
+WORKDIR /app/farm2Pot/backend
+
+# core 모듈만 빌드
 RUN ./gradlew :apps:core:bootJar --no-daemon
 
-# 실행용 JDK
+# 2단계: 런타임
 FROM eclipse-temurin:21-jdk
 
-WORKDIR /app
+WORKDIR /app/farm2Pot
+# 빌드 stage에서 생성된 jar만 복사
+COPY --from=builder /app/farm2Pot/backend/apps/core/build/libs/*.jar farm2Pot-core.jar
 
-# 빌드된 JAR 복사
-COPY --from=builder /app/apps/core/build/libs/*.jar farm2Pot-core.jar
-
-# 실행
-ENTRYPOINT ["java", "-jar", "/app/farm2Pot-core.jar"]
+ENTRYPOINT ["java", "-jar", "farm2Pot-core.jar"]

@@ -1,6 +1,6 @@
 # CORE DEV - backend server port
 server:
-  port: 18083
+  port: 18080
 
 spring:
   datasource:
@@ -23,4 +23,6 @@ kafka:
 
 # frontend server host
 frontend:
+  protocol: http
   host: localhost
+  port: 4000 # user

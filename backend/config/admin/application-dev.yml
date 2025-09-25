@@ -1,6 +1,6 @@
 # ADMIN DEV - backend server port
 server:
-  port: 18081
+  port: 18082
 
 spring:
   datasource:
@@ -23,5 +23,8 @@ kafka:
 
 # frontend server host
 frontend:
+  protocol: http
   host: localhost
+  port: 2000
+
 

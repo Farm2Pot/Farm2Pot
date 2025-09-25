@@ -1,6 +1,6 @@
 # SUBSCRIPTION DEV - backend server port
 server:
-  port: 18082
+  port: 18083
 
 spring:
   datasource:
@@ -23,5 +23,7 @@ kafka:
 
 # frontend server host
 frontend:
+  protocol: http
   host: localhost
+  port: 3000
 
