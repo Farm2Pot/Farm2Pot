@@ -1,0 +1,32 @@
+services:
+  frontend-user-service:
+    build:
+      context: .
+      dockerfile: packages/user/Dockerfile
+    container_name: frontend-user-service
+    ports:
+      - "14000:4000"  # 외부:컨테이너 Vite dev port
+      - "24000:4000"
+    environment:
+      VITE_MODE: "production"
+    networks:
+      - farm2Pot-network
+    restart: unless-stopped
+
+  frontend-admin-service:
+    build:
+      context: .
+      dockerfile: packages/admin/Dockerfile
+    container_name: frontend-admin-service
+    ports:
+      - "12000:2000"
+      - "22000:2000"
+    environment:
+      VITE_MODE: "production"
+    networks:
+      - farm2Pot-network
+    restart: unless-stopped
+
+networks:
+  farm2Pot-network:
+    driver: bridge

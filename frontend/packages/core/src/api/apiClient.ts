@@ -1,9 +1,15 @@
+// apiClient.ts
 import axios from "axios";
-import type { AxiosInstance, AxiosRequestConfig, AxiosError } from "axios";
+import type { AxiosInstance } from "axios";
 
-export class ApiClient {
-  public name: string;
+/**
+ * 공통 Axios Wrapper
+ * client: axios instance
+ * name: 서버 이름 (User, Admin, Subscription, Core)
+ */
+class ApiClient {
   private client: AxiosInstance;
+  private name: string;
 
   constructor(baseURL: string, name: string) {
     this.client = axios.create({ baseURL, timeout: 5000 });
@@ -12,11 +18,12 @@ export class ApiClient {
 
   async get<T = any>(path: string, config?: AxiosRequestConfig): Promise<T> {
     try {
-      const res = await this.client.get<T>(path, config);
+      const res: AxiosResponse<T> = await this.client.get(path, config);
       return res.data;
     } catch (err: unknown) {
-      return this.handleError(err);
+      this.handleError(err);
     }
+    throw new Error(`${this.name} 서버 요청 실패`);
   }
 
   async post<T = any, D = any>(
@@ -25,24 +32,28 @@ export class ApiClient {
     config?: AxiosRequestConfig
   ): Promise<T> {
     try {
-      const res = await this.client.post<T>(path, data, config);
+      const res: AxiosResponse<T> = await this.client.post(path, data, config);
       return res.data;
     } catch (err: unknown) {
-      return this.handleError(err);
+      this.handleError(err);
     }
+    throw new Error(`${this.name} 서버 요청 실패`);
   }
 
   private handleError(error: unknown): never {
     if (axios.isAxiosError(error)) {
-      const aErr = error as AxiosError<{ error?: string }>;
-      if (aErr.response?.data?.error) {
-        throw new Error(`${this.name} 서버 오류: ${aErr.response.data.error}`);
+      const axiosError = error as AxiosError<{ error?: string }>;
+      if (axiosError.response?.data?.error) {
+        throw new Error(
+          `${this.name} 서버 오류: ${axiosError.response.data.error}`
+        );
       }
     }
     throw new Error(`${this.name} 서버 요청 실패`);
   }
 }
 
+// 각 서버별 인스턴스
 export const userApi = new ApiClient("/user-api", "User");
 export const subscriptionApi = new ApiClient("/sub-api", "Subscription");
 export const adminApi = new ApiClient("/admin-api", "Admin");

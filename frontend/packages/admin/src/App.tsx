@@ -1,29 +1,54 @@
-import React, { useState } from "react";
-import { userApi, adminApi, subscriptionApi, coreApi } from "./api/apiClient";
+import { useState } from "react";
+import {
+  adminApi,
+  coreApi,
+  subscriptionApi,
+  userApi,
+} from "../../core/src/api/apiClient.js";
 
-export default function App() {
-  const [message, setMessage] = useState<string>("");
+function App() {
+  const [response, setResponse] = useState<string>("");
 
-  const handleTest = async (api: any, path: string) => {
+  const handleCheckHealth = async (api: any, path: string) => {
     try {
-      const data = await api.get(`${path}/health`);
-      setMessage(`${api.name} 테스트 성공`);
-      console.log(data);
-    } catch (err: any) {
-      setMessage(err?.message ?? "알 수 없는 오류");
+      // user-service 헬스체크 API 호출
+      const data = await api.get<string>(path);
+      setResponse(`✅ 성공: ${data}`);
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setResponse(`❌ 실패: ${err.message}`);
+      } else {
+        setResponse("❌ 알 수 없는 오류 발생");
+      }
     }
   };
 
   return (
-    <div>
-      <h2>Bizwell</h2>
-      <button onClick={() => handleTest(userApi, "/user")}>User Test</button>
-      <button onClick={() => handleTest(adminApi, "/admin")}>Admin Test</button>
-      <button onClick={() => handleTest(subscriptionApi, "/subscription")}>
-        Subscription Test
+    <div style={{ padding: "20px" }}>
+      <h1>User Service Health Check</h1>
+      <button onClick={() => handleCheckHealth(userApi, "user/health")}>
+        Check User Health
       </button>
-      <button onClick={() => handleTest(coreApi, "/core")}>Core Test</button>
-      <div>{message}</div>
+      <button onClick={() => handleCheckHealth(adminApi, "admin/health")}>
+        Check Admin Health
+      </button>
+      <button
+        onClick={() =>
+          handleCheckHealth(subscriptionApi, "subscription/health")
+        }
+      >
+        Check Sub Health
+      </button>
+      <button onClick={() => handleCheckHealth(coreApi, "core/health")}>
+        Check Core Health
+      </button>
+      {response && (
+        <div style={{ marginTop: "10px" }}>
+          <strong>Response:</strong> {response}
+        </div>
+      )}
     </div>
   );
 }
+
+export default App;

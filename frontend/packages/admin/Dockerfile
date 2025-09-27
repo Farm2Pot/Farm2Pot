@@ -1,29 +1,42 @@
-# 1단계: 빌드
-FROM node:20-alpine AS builder
-
-RUN apk add --no-cache python3 make g++
+# 1단계: Builder
+FROM node:20-bullseye AS builder
 
 WORKDIR /app/frontend
-COPY . .
 
-WORKDIR /app/frontend/packages/admin
+# npm registry 설정 (타임아웃 방지)
+RUN npm config set registry https://registry.npmmirror.com/ \
+    && npm config set fetch-timeout 60000
 
-# RUN npm config set registry https://registry.npmmirror.com/
+# package.json, package-lock.json, tsconfig 복사 후 의존성 설치
+COPY packages/user/package*.json ./packages/user/
+COPY packages/user/tsconfig*.json ./packages/user/
+COPY tsconfig.base.json ./ 
+COPY packages/core ./packages/core
 
+WORKDIR /app/frontend/packages/user
 RUN npm install
+
+# 소스 복사 후 빌드
+COPY packages/user/src ./src
+COPY packages/user/public ./public
+
+
 RUN npm run build
 
-# 2단계: 런타임
-FROM node:20-alpine
+# 2단계: Runtime
+FROM node:20-bullseye
 
-WORKDIR /app/frontend/packages/admin
+WORKDIR /app/frontend/packages/user
 
-# 빌드 결과만 복사
-COPY --from=builder /app/frontend/packages/admin/dist ./dist
-COPY --from=builder /app/frontend/packages/admin/package.json ./package.json
-COPY --from=builder /app/frontend/package-lock.json ./package-lock.json
+# production 의존성만 설치
+COPY packages/user/package*.json ./
+RUN npm install --omit=dev
 
-RUN npm install
+# 빌드 산출물 복사
+COPY --from=builder /app/frontend/packages/user/dist ./dist
+COPY --from=builder /app/frontend/packages/user/public ./public
 
-# 실행 (개발 서버가 아니라 실제 production build를 서비스)
-CMD ["sh", "-c", "npm run dev -- --host 0.0.0.0 --mode ${VITE_MODE}"]
+ENV PORT=2000
+
+#CMD ["sh", "-c", "npm run dev -- --host 0.0.0.0 --mode ${VITE_MODE}"]
+CMD ["sh", "-c", "sleep infinity"]
