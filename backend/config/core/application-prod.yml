@@ -23,6 +23,5 @@ kafka:
 
 # frontend server host
 frontend:
-  protocol: ${FRONTEND_PROTOCOL}
-  host: ${FRONTEND_HOST}
-  port: ${FRONTEND_PORT}
+  user-url: ${FRONTEND_USER_URL}
+  admin-url: ${FRONTEND_ADMIN_URL}

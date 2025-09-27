@@ -23,8 +23,6 @@ kafka:
 
 # frontend server host
 frontend:
-  protocol: http
-  host: localhost
-  port: 2000
-
+  user-url: localhost:14000
+  admin-url: localhost:12000
 

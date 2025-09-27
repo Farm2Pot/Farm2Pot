@@ -7,19 +7,16 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 public class CoreWebConfig implements WebMvcConfigurer {
-    @Value("${frontend.host}")
-    private String frontendHost;
+    @Value("${frontend.user-url}")
+    private String frontend_user_url;
 
-    @Value("${frontend.port}")
-    private String frontendPort;
-
-    @Value("${frontend.protocol}")
-    private String protocol;
+    @Value("${frontend.admin-url}")
+    private String frontend_admin_url;
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins(protocol + "://" + frontendHost + ":" + frontendPort)
+                .allowedOrigins(frontend_admin_url, frontend_user_url)
                 .allowedMethods("*")
                 .allowCredentials(true); // 필요 시 true
     }

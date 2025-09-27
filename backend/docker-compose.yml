@@ -77,7 +77,7 @@ services:
       java -Dspring.config.location=/config/core/ -jar farm2Pot-core.jar
     environment:
       SPRING_PROFILES_ACTIVE: prod
-      SPRING_SERVER_PORT: 28080
+      SPRING_SERVER_PORT: 8080
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/farm2Pot
       SPRING_DATASOURCE_USERNAME: farm2Pot
       SPRING_DATASOURCE_PASSWORD: farm2Pot
@@ -86,7 +86,9 @@ services:
       SPRING_REDIS_HOST: redis-master
       SPRING_REDIS_MASTER_PORT: 26379
       SPRING_REDIS_REPL_HOST: redis-readonly
-      SPRING_REDIS_REPL_PORT: 26380
+      SPRING_REDIS_REPL_PORT: 6380
+      FRONTEND_USER_URL: http://frontend-user-service:4000
+      FRONTEND_ADMIN_URL: http://frontend-admin-service:2000
     depends_on:
       mysql:
         condition: service_healthy
@@ -110,17 +112,18 @@ services:
       java -Dspring.config.location=/config/user/ -jar farm2Pot-user.jar
     environment:
       SPRING_PROFILES_ACTIVE: prod
-      SPRING_SERVER_PORT: 28081
+      SPRING_SERVER_PORT: 8081
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/farm2Pot
       SPRING_DATASOURCE_USERNAME: farm2Pot
       SPRING_DATASOURCE_PASSWORD: farm2Pot
       SPRING_DATASOURCE_HOST: mysql
       SPRING_FRONTEND_HOST: frontend
       SPRING_REDIS_HOST: redis-master
-      SPRING_REDIS_MASTER_PORT: 26379
+      SPRING_REDIS_MASTER_PORT: 6379
       SPRING_REDIS_REPL_HOST: redis-readonly
-      SPRING_REDIS_REPL_PORT: 26380
-      
+      SPRING_REDIS_REPL_PORT: 6380
+      FRONTEND_USER_URL: http://frontend-user-service:4000
+      FRONTEND_ADMIN_URL: http://frontend-admin-service:2000
     depends_on:
       core-service:
         condition: service_started
@@ -146,16 +149,18 @@ services:
       java -Dspring.config.location=/config/admin/ -jar farm2Pot-admin.jar
     environment:
       SPRING_PROFILES_ACTIVE: prod
-      SPRING_SERVER_PORT: 28082
+      SPRING_SERVER_PORT: 8082
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/farm2Pot
       SPRING_DATASOURCE_USERNAME: farm2Pot
       SPRING_DATASOURCE_PASSWORD: farm2Pot
       SPRING_DATASOURCE_HOST: mysql
       SPRING_FRONTEND_HOST: frontend
       SPRING_REDIS_HOST: redis-master
-      SPRING_REDIS_MASTER_PORT: 26379
+      SPRING_REDIS_MASTER_PORT: 6379
       SPRING_REDIS_REPL_HOST: redis-readonly
-      SPRING_REDIS_REPL_PORT: 26380
+      SPRING_REDIS_REPL_PORT: 6380
+      FRONTEND_USER_URL: http://frontend-user-service:4000
+      FRONTEND_ADMIN_URL: http://frontend-admin-service:2000
     depends_on:
       core-service:
         condition: service_started
@@ -181,16 +186,18 @@ services:
       java -Dspring.config.location=/config/subscription/ -jar farm2Pot-subscription.jar
     environment:
       SPRING_PROFILES_ACTIVE: prod
-      SPRING_SERVER_PORT: 28083
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/farm2Pot
+      SPRING_SERVER_PORT: 8083
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/farm2Pot?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC
       SPRING_DATASOURCE_USERNAME: farm2Pot
       SPRING_DATASOURCE_PASSWORD: farm2Pot
       SPRING_DATASOURCE_HOST: mysql
       SPRING_FRONTEND_HOST: frontend
       SPRING_REDIS_HOST: redis-master
-      SPRING_REDIS_MASTER_PORT: 26379
+      SPRING_REDIS_MASTER_PORT: 6379
       SPRING_REDIS_REPL_HOST: redis-readonly
-      SPRING_REDIS_REPL_PORT: 26380
+      SPRING_REDIS_REPL_PORT: 6380
+      FRONTEND_USER_URL: http://frontend-user-service:4000
+      FRONTEND_ADMIN_URL: http://frontend-admin-service:2000
     depends_on:
       core-service:
         condition: service_started
