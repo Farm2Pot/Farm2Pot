@@ -1,0 +1,25 @@
+# node_modules: 설치된 패키지 폴더 (절대 올리지 마세요)
+node_modules/
+packages/**/node_modules/
+
+# 빌드 결과물
+dist/
+packages/**/dist/
+
+# 환경 변수 파일 (보안 위험)
+.env
+.env.local
+.env.*.local
+
+# 시스템 파일
+.DS_Store
+Thumbs.db
+
+# 로그 파일
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+
+# IDE 설정 (선택)
+.vscode/
+.idea/
