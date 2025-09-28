@@ -1,38 +1,28 @@
-# 1단계: Builder
 FROM node:20-bullseye AS builder
 
-WORKDIR /app/frontend/packages/user 
+WORKDIR /app/frontend
 
 # npm registry 설정 (타임아웃 방지)
 RUN npm config set registry https://registry.npmmirror.com/ \
     && npm config set fetch-timeout 60000
 
-# package.json, tsconfig 먼저 복사
-#COPY ../../package*.json ./
+#root 패키지 의존성 복사
 COPY package*.json ./
-COPY tsconfig*.json ./
-COPY ../../tsconfig.base.json ../../tsconfig.base.json
+RUN npm ci --legacy-peer-deps --no-audit --no-fund --progress=false
 
-# 의존성 설치
-RUN npm install
+# user 패키지 의존성 복사
+COPY ./packages/user/package*.json ./packages/user/
+COPY ./packages/user/tsconfig*.json ./packages/user/
 
-# 소스 복사 후 빌드
-COPY ./packages/user/src ./src
-COPY ./packages/user/public ./public
+WORKDIR /app/frontend/packages/user
 
-# RUN npm run build
+# 의존성 설치 (빠르고 안전하게)
+RUN npm ci --legacy-peer-deps --no-audit --no-fund --progress=false
 
-# 2단계: Runtime
-FROM node:20-bullseye
+# 소스 코드 복사 (이 시점 이후 변경된 경우만 rebuild)
+COPY ./packages/user ./ 
 
-WORKDIR /app/frontend/packages/user 
+ENV PORT=4000
 
-COPY package*.json ./
-RUN npm install --omit=dev
-
-#COPY --from=builder /app/frontend/packages/user/dist ./dist
-#COPY --from=builder /app/frontend/packages/user/public ./public
-
-ENV PORT=4000  
 CMD ["sh", "-c", "npm run dev -- --host 0.0.0.0 --mode ${VITE_MODE}"]
 #CMD ["sh", "-c", "sleep infinity"]
